@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Floresta Encantada - Jornada do Elfo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="menu">
+      <ul>
+        <li class="active"><a href="index.html">Desafio</a></li>
+        <li><a href="game.html">Game</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <h1>🌲 A Jornada do Elfo Eldrin 🌲</h1>
+      <p class="description">Ajude Eldrin a navegar pela Floresta Encantada usando coordenadas mágicas.</p>
+
+      <div class="input-group">
+        <label for="commands">Comandos Mágicos (separados por vírgula):</label>
+        <input type="text" id="commands" placeholder="Ex: RIGHT, RIGHT, UP, DOWN, LEFT, UP" />
+      </div>
+
+      <div class="button-group">
+        <button id="navigateBtn" style="--clr: #4caf50"><span>NAVEGAR</span><i></i></button>
+        <button id="backBtn" style="--clr: #ff9800"><span>VOLTAR</span><i></i></button>
+      </div>
+
+      <div class="result-section">
+        <h2>Resultado da Jornada</h2>
+        <div id="calculation"></div>
+        <div id="result"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

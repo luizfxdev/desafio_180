@@ -1,0 +1,383 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+  background: url('/images/background1.jpg') no-repeat center center fixed;
+  background-size: cover;
+  padding-left: 50px;
+  color: #f0f0f0;
+}
+
+/* Estilos do Menu */
+.menu {
+  width: 100%;
+  background-color: rgba(39, 39, 44, 0.9);
+  padding: 1rem 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.menu a {
+  color: #f0f0f0;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.menu a:hover {
+  background-color: rgba(76, 175, 80, 0.3);
+}
+
+.menu .active a {
+  background-color: #4caf50;
+  color: #272822;
+}
+.container {
+  max-width: 800px;
+  background-color: rgba(39, 39, 44, 0.9);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 80px; /* Espaço para o menu fixo */
+}
+
+h1 {
+  color: #4caf50;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.description {
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #272822;
+  color: #f0f0f0;
+  font-size: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+button {
+  position: relative;
+  background: #444;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: none;
+  letter-spacing: 0.1rem;
+  font-size: 1rem;
+  padding: 1rem 3rem;
+  transition: 0.2s;
+  cursor: pointer;
+  flex: 1;
+}
+
+button:hover {
+  letter-spacing: 0.2rem;
+  padding: 1.1rem 3.1rem;
+  background: var(--clr);
+  color: var(--clr);
+  animation: box 3s infinite;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #272822;
+}
+
+button span {
+  position: relative;
+  z-index: 1;
+}
+
+button i {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+button i::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  left: 80%;
+  top: -2px;
+  border: 2px solid var(--clr);
+  background: #272822;
+  transition: 0.2s;
+}
+
+button:hover i::before {
+  width: 15px;
+  left: 20%;
+  animation: move 3s infinite;
+}
+
+button i::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  left: 20%;
+  bottom: -2px;
+  border: 2px solid var(--clr);
+  background: #272822;
+  transition: 0.2s;
+}
+
+button:hover i::after {
+  width: 15px;
+  left: 80%;
+  animation: move 3s infinite;
+}
+
+.result-section {
+  background-color: rgba(39, 40, 34, 0.7);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border-left: 4px solid #4caf50;
+}
+
+.result-section h2 {
+  color: #ff9800;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+#calculation {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+#result {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4caf50;
+  padding: 0.5rem;
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 5px;
+}
+
+/* Estilos específicos do game.html */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
+  margin-bottom: 2rem;
+}
+
+.game-cell {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.game-cell.current {
+  background-color: #ff9800;
+  transform: scale(1.1);
+}
+
+.game-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.horizontal-controls {
+  display: flex;
+  gap: 4rem;
+}
+
+.game-stats {
+  background-color: rgba(39, 40, 34, 0.7);
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.game-stats span {
+  font-weight: bold;
+  color: #4caf50;
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes box {
+  0% {
+    box-shadow: #27272c;
+  }
+  50% {
+    box-shadow: 0 0 25px var(--clr);
+  }
+  100% {
+    box-shadow: #27272c;
+  }
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .menu {
+    padding: 1rem 20px;
+  }
+
+  .menu ul {
+    gap: 1rem;
+  }
+
+  .container {
+    width: 100%;
+    padding: 1.5rem;
+    margin-top: 70px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .game-board {
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(10, 30px);
+  }
+
+  .game-cell {
+    width: 30px;
+    height: 30px;
+  }
+
+  .horizontal-controls {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 0.8rem 2rem;
+    font-size: 0.9rem;
+  }
+
+  button:hover {
+    padding: 0.9rem 2.1rem;
+  }
+
+  .menu ul {
+    gap: 0.5rem;
+  }
+
+  .menu a {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .game-board {
+    grid-template-columns: repeat(10, 25px);
+    grid-template-rows: repeat(10, 25px);
+  }
+
+  .game-cell {
+    width: 25px;
+    height: 25px;
+  }
+
+  .horizontal-controls {
+    gap: 1.5rem;
+  }
+}

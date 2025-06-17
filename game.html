@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A Jornada do Elfo na Floresta Encantada</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Estilos do Menu */
+      .menu {
+        width: 100%;
+        background-color: rgba(30, 60, 114, 0.9);
+        padding: 1rem 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .menu ul {
+        display: flex;
+        list-style: none;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+
+      .menu a {
+        color: #f0f0f0;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .menu a:hover {
+        background-color: rgba(76, 175, 80, 0.3);
+      }
+
+      .menu .active a {
+        background-color: #4caf50;
+        color: #272822;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        min-height: 100vh;
+        padding: 20px;
+        padding-top: 80px; /* Espaço para o menu fixo */
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+
+      .game-area {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .forest-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .forest {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 2px;
+        background: #2d5a2d;
+        padding: 8px;
+        border-radius: 10px;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .cell {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%; /* Mantém proporção quadrada */
+        background: #4a7c4a;
+        border: 1px solid #3a6b3a;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .cell > span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        line-height: 1;
+      }
+
+      .cell:hover {
+        background: #5a8c5a;
+      }
+
+      .cell.elf {
+        background: #ffd700;
+        box-shadow: 0 0 15px #ffd700;
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      .cell.path {
+        background: #87ceeb;
+        box-shadow: 0 0 5px #87ceeb;
+      }
+
+      .cell.exit {
+        background: #ff6b6b;
+        box-shadow: 0 0 15px #ff6b6b;
+        animation: exitGlow 2s ease-in-out infinite alternate;
+      }
+
+      .cell.victory {
+        background: #32cd32;
+        box-shadow: 0 0 20px #32cd32;
+        animation: victoryPulse 1s ease-in-out infinite;
+      }
+
+      @keyframes exitGlow {
+        from {
+          box-shadow: 0 0 15px #ff6b6b;
+        }
+        to {
+          box-shadow: 0 0 25px #ff6b6b, 0 0 35px #ff6b6b;
+        }
+      }
+
+      @keyframes victoryPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      @keyframes glow {
+        from {
+          box-shadow: 0 0 15px #ffd700;
+        }
+        to {
+          box-shadow: 0 0 25px #ffd700, 0 0 35px #ffd700;
+        }
+      }
+
+      .controls {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .movement-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 15px;
+        max-width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(45deg, #4caf50, #45a049);
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-up {
+        grid-column: 2;
+      }
+      .btn-left {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .btn-right {
+        grid-column: 3;
+        grid-row: 2;
+      }
+      .btn-down {
+        grid-column: 2;
+        grid-row: 3;
+      }
+
+      .btn-reset {
+        background: linear-gradient(45deg, #f44336, #d32f2f);
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .status {
+        margin-top: 15px;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        font-size: 14px;
+      }
+
+      .command-list {
+        text-align: left;
+        margin-top: 10px;
+      }
+
+      .command-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 4px 8px;
+        margin: 4px 0;
+        border-radius: 5px;
+        display: inline-block;
+        margin-right: 4px;
+        font-size: 12px;
+      }
+
+      .warning {
+        background: rgba(255, 193, 7, 0.2);
+        border: 2px solid #ffc107;
+        padding: 8px;
+        border-radius: 5px;
+        margin-top: 8px;
+        animation: pulse 2s ease-in-out infinite;
+        font-size: 14px;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Responsividade */
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+
+        .menu ul {
+          gap: 1rem;
+        }
+
+        .menu a {
+          padding: 0.5rem;
+          font-size: 0.8rem;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+        }
+
+        .game-area {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .forest-container,
+        .controls {
+          max-width: 100%;
+        }
+
+        .cell {
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 15px;
+          padding-top: 60px;
+        }
+
+        .menu ul {
+          gap: 0.5rem;
+        }
+
+        .menu a {
+          padding: 0.4rem 0.6rem;
+          font-size: 0.7rem;
+        }
+
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .btn {
+          padding: 8px 12px;
+          font-size: 12px;
+        }
+
+        .status {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Menu Superior -->
+    <nav class="menu">
+      <ul>
+        <li><a href="index.html">Desafio</a></li>
+        <li class="active"><a href="game.html">Game</a></li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <h1>🌲 A Jornada do Elfo na Floresta Encantada 🧝‍♂️</h1>
+      <p class="subtitle">Guie Eldrin pela misteriosa floresta usando os comandos mágicos!</p>
+
+      <div class="game-area">
+        <div class="forest-container">
+          <h3>Floresta Encantada (10x10)</h3>
+          <div class="forest" id="forest"></div>
+        </div>
+
+        <div class="controls">
+          <h3>Controles Mágicos</h3>
+
+          <div class="movement-buttons">
+            <button class="btn btn-up" onclick="moveElf('UP')">⬆️ UP</button>
+            <button class="btn btn-left" onclick="moveElf('LEFT')">⬅️ LEFT</button>
+            <button class="btn btn-right" onclick="moveElf('RIGHT')">➡️ RIGHT</button>
+            <button class="btn btn-down" onclick="moveElf('DOWN')">⬇️ DOWN</button>
+          </div>
+
+          <button class="btn btn-reset" onclick="resetGame()">🔄 Reiniciar Jornada</button>
+
+          <div class="status">
+            <div><strong>Posição de Eldrin:</strong> <span id="position">(0, 0)</span></div>
+            <div><strong>Objetivo:</strong> Chegar em (9, 9) 🚪</div>
+            <div><strong>Movimentos:</strong> <span id="moveCount">0</span></div>
+            <div class="command-list">
+              <strong>Comandos executados:</strong>
+              <div id="commandHistory"></div>
+            </div>
+          </div>
+
+          <div id="warning" class="warning" style="display: none">
+            ⚠️ Cuidado! Eldrin quase caiu em um buraco temporal!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Adiciona classe ativa ao menu
+      document.addEventListener('DOMContentLoaded', function () {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html'
+        const menuItems = document.querySelectorAll('.menu li')
+
+        menuItems.forEach(item => {
+          const link = item.querySelector('a')
+          if (link.getAttribute('href') === currentPage) {
+            item.classList.add('active')
+          } else {
+            item.classList.remove('active')
+          }
+        })
+      })
+
+      class ElfGame {
+        constructor() {
+          this.elfPosition = { x: 0, y: 0 }
+          this.commandHistory = []
+          this.forestSize = 10
+          this.path = []
+          this.exitPosition = { x: 9, y: 9 } // Saída no canto inferior direito
+          this.gameWon = false
+          this.initializeForest()
+          this.updateDisplay()
+        }
+
+        initializeForest() {
+          const forest = document.getElementById('forest')
+          forest.innerHTML = ''
+
+          for (let y = 0; y < this.forestSize; y++) {
+            for (let x = 0; x < this.forestSize; x++) {
+              const cell = document.createElement('div')
+              cell.className = 'cell'
+              cell.id = `cell-${x}-${y}`
+              const span = document.createElement('span')
+              span.textContent = '🌲'
+              cell.appendChild(span)
+              forest.appendChild(cell)
+            }
+          }
+        }
+
+        navigateElf(steps) {
+          const startPosition = { ...this.elfPosition }
+
+          for (const step of steps) {
+            if (!this.moveElf(step, false)) {
+              // Se movimento inválido, reverte para posição inicial
+              this.elfPosition = startPosition
+              return false
+            }
+          }
+          return true
+        }
+
+        moveElf(direction, updateHistory = true) {
+          const newPosition = { ...this.elfPosition }
+
+          switch (direction.toUpperCase()) {
+            case 'UP':
+              newPosition.y -= 1
+              break
+            case 'DOWN':
+              newPosition.y += 1
+              break
+            case 'LEFT':
+              newPosition.x -= 1
+              break
+            case 'RIGHT':
+              newPosition.x += 1
+              break
+            default:
+              return false
+          }
+
+          // Verifica limites da floresta
+          if (
+            newPosition.x < 0 ||
+            newPosition.x >= this.forestSize ||
+            newPosition.y < 0 ||
+            newPosition.y >= this.forestSize
+          ) {
+            this.showWarning()
+            return false
+          }
+
+          // Adiciona posição atual ao caminho
+          this.path.push({ ...this.elfPosition })
+
+          // Atualiza posição
+          this.elfPosition = newPosition
+
+          // Verifica se chegou na saída
+          if (this.elfPosition.x === this.exitPosition.x && this.elfPosition.y === this.exitPosition.y) {
+            this.gameWon = true
+            setTimeout(() => {
+              alert('🎉 Parabéns! Eldrin escapou da floresta com sucesso! 🧝‍♂️✨')
+            }, 100)
+          }
+
+          if (updateHistory) {
+            this.commandHistory.push(direction.toUpperCase())
+            this.updateDisplay()
+          }
+
+          return true
+        }
+
+        showWarning() {
+          const warning = document.getElementById('warning')
+          warning.style.display = 'block'
+          setTimeout(() => {
+            warning.style.display = 'none'
+          }, 3000)
+        }
+
+        updateDisplay() {
+          // Limpa todas as células
+          for (let y = 0; y < this.forestSize; y++) {
+            for (let x = 0; x < this.forestSize; x++) {
+              const cell = document.getElementById(`cell-${x}-${y}`)
+              cell.className = 'cell'
+              cell.querySelector('span').textContent = '🌲'
+            }
+          }
+
+          // Marca a saída
+          const exitCell = document.getElementById(`cell-${this.exitPosition.x}-${this.exitPosition.y}`)
+          if (exitCell) {
+            exitCell.classList.add('exit')
+            exitCell.querySelector('span').textContent = '🚪'
+          }
+
+          // Marca o caminho percorrido
+          this.path.forEach(pos => {
+            const cell = document.getElementById(`cell-${pos.x}-${pos.y}`)
+            if (
+              cell &&
+              !(pos.x === this.elfPosition.x && pos.y === this.elfPosition.y) &&
+              !(pos.x === this.exitPosition.x && pos.y === this.exitPosition.y)
+            ) {
+              cell.classList.add('path')
+              cell.querySelector('span').textContent = '👣'
+            }
+          })
+
+          // Marca posição atual do elfo
+          const elfCell = document.getElementById(`cell-${this.elfPosition.x}-${this.elfPosition.y}`)
+          if (elfCell) {
+            elfCell.classList.add('elf')
+            if (this.gameWon) {
+              elfCell.classList.add('victory')
+              elfCell.querySelector('span').textContent = '🎉'
+            } else {
+              elfCell.querySelector('span').textContent = '🧝‍♂️'
+            }
+          }
+
+          // Atualiza informações
+          document.getElementById('position').textContent = `(${this.elfPosition.x}, ${this.elfPosition.y})`
+          document.getElementById('moveCount').textContent = this.commandHistory.length
+
+          // Atualiza histórico de comandos
+          const historyDiv = document.getElementById('commandHistory')
+          historyDiv.innerHTML = this.commandHistory.map(cmd => `<span class="command-item">${cmd}</span>`).join('')
+        }
+
+        reset() {
+          this.elfPosition = { x: 0, y: 0 }
+          this.commandHistory = []
+          this.path = []
+          this.gameWon = false
+          this.updateDisplay()
+        }
+      }
+
+      // Inicializa o jogo
+      const game = new ElfGame()
+
+      // Funções globais para os botões
+      function moveElf(direction) {
+        game.moveElf(direction)
+      }
+
+      function resetGame() {
+        game.reset()
+      }
+
+      // Controles por teclado
+      document.addEventListener('keydown', e => {
+        switch (e.key) {
+          case 'ArrowUp':
+            e.preventDefault()
+            moveElf('UP')
+            break
+          case 'ArrowDown':
+            e.preventDefault()
+            moveElf('DOWN')
+            break
+          case 'ArrowLeft':
+            e.preventDefault()
+            moveElf('LEFT')
+            break
+          case 'ArrowRight':
+            e.preventDefault()
+            moveElf('RIGHT')
+            break
+          case 'r':
+          case 'R':
+            resetGame()
+            break
+        }
+      })
+    </script>
+  </body>
+</html>
